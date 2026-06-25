@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大学竞赛破局指南与电赛实战辅导</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #f0f4f8; /* 浅蓝灰背景 */
+            --slide-bg: #ffffff;
+            --text-main: #2d3748; /* 深灰蓝 */
+            --text-muted: #718096;
+            --primary-color: #3182ce; /* 亮蓝色 */
+            --secondary-color: #e2e8f0;
+            --accent-color: #38b2ac; /* 蓝绿色 */
+            --border-radius: 12px;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 0;
+            gap: 40px;
+        }
+
+        .slide {
+            width: 1280px;
+            height: 720px;
+            background-color: var(--slide-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 50px 60px;
+        }
+
+        /* 统一标题样式 */
+        .slide-header {
+            margin-bottom: 40px;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .slide-header::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            bottom: 5px;
+            width: 6px;
+            background-color: var(--primary-color);
+            border-radius: 3px;
+        }
+
+        .slide-title {
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* 幻灯片布局容器 */
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            height: 100%;
+            align-items: center;
+        }
+
+        /* 卡片样式 */
+        .card {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        /* 列表样式 */
+        ul {
+            list-style: none;
+        }
+        
+        .custom-list li {
+            margin-bottom: 20px;
+            padding-left: 35px;
+            position: relative;
+            font-size: 20px;
+            line-height: 1.6;
+        }
+
+        .custom-list li::before {
+            content: '►';
+            color: var(--primary-color);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 18px;
+        }
+
+        /* 图片样式 */
+        .img-container {
+            width: 100%;
+            height: 100%;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 强调文本 */
+        .highlight {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        /* 数学公式容器 */
+        .math-container {
+            font-size: 24px;
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #ebf8ff;
+            border-radius: 8px;
+            color: #2b6cb0;
+        }
+
+        /* 表格样式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 18px;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--secondary-color);
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 500;
+        }
+
+        /* 装饰元素 */
+        .bg-shape {
+            position: absolute;
+            z-index: 0;
+            opacity: 0.05;
+        }
+
+        .slide > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 时间线专属UI样式 (修复自适应与截断问题) */
+        .tl-wrapper { position: relative; max-width: 1000px; margin: 0 auto; padding: 20px 0; display: flex; flex-direction: column; gap: 40px;}
+        .tl-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 4px; background: #e2e8f0; transform: translateX(-50%); border-radius: 2px; }
+        .tl-item { display: flex; justify-content: space-between; align-items: center; width: 100%; position: relative; }
+        
+        /* 卡片主体 */
+        .tl-card { width: 45%; background: #ffffff; padding: 25px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.06); border: 1px solid #edf2f7; position: relative; transition: transform 0.3s ease; z-index: 10;}
+        .tl-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.1); }
+        
+        /* 中间发光节点 */
+        .tl-node { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 4px solid; z-index: 2; box-shadow: 0 0 0 5px rgba(255,255,255,0.8); }
+        
+        /* 左右两侧小箭头 */
+        .tl-right::before { content: ''; position: absolute; left: -10px; top: 50%; transform: translateY(-50%); border-width: 10px 10px 10px 0; border-style: solid; border-color: transparent #edf2f7 transparent transparent; }
+        .tl-right::after { content: ''; position: absolute; left: -8px; top: 50%; transform: translateY(-50%); border-width: 9px 9px 9px 0; border-style: solid; border-color: transparent #fff transparent transparent; z-index: 1;}
+        .tl-left::before { content: ''; position: absolute; right: -10px; top: 50%; transform: translateY(-50%); border-width: 10px 0 10px 10px; border-style: solid; border-color: transparent transparent transparent #edf2f7; }
+        .tl-left::after { content: ''; position: absolute; right: -8px; top: 50%; transform: translateY(-50%); border-width: 9px 0 9px 9px; border-style: solid; border-color: transparent transparent transparent #fff; z-index: 1;}
+        
+        /* 强制对齐修正 */
+        .tl-item:nth-child(odd) { flex-direction: row-reverse; }
+        
+        /* 文字排版 */
+        .tl-title { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+        .tl-tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 14px; font-weight: 500; margin-bottom: 12px; }
+        .tl-list { list-style: none; padding: 0; text-align: left; }
+        .tl-list li { margin-bottom: 8px; font-size: 15px; line-height: 1.5; position: relative; padding-left: 15px; color: #4a5568; }
+        .tl-list li::before { content: '•'; position: absolute; left: 0; font-size: 18px; top: -3px; }
+        
+        /* 颜色主题配置 */
+        .t-blue { color: var(--primary-color); }
+        .b-blue { border-top: 4px solid var(--primary-color); }
+        .bg-blue { background: #ebf8ff; color: #2b6cb0; }
+        .n-blue { border-color: var(--primary-color); box-shadow: 0 0 0 5px rgba(49, 130, 206, 0.15); }
+
+        .t-teal { color: var(--accent-color); }
+        .b-teal { border-top: 4px solid var(--accent-color); }
+        .bg-teal { background: #e6fffa; color: #285e61; }
+        .n-teal { border-color: var(--accent-color); box-shadow: 0 0 0 5px rgba(56, 178, 172, 0.15); }
+
+        .t-org { color: #ed8936; }
+        .b-org { border-top: 4px solid #ed8936; }
+        .bg-org { background: #fffaf0; color: #c05621; }
+        .n-org { border-color: #ed8936; box-shadow: 0 0 0 5px rgba(237, 137, 54, 0.15); }
+    </style>
+</head>
+<body>
+
+    <!-- Slide 1: 封面 -->
+    <div class="slide" style="justify-content: center; align-items: center; text-align: center; background: linear-gradient(135deg, #ebf8ff 0%, #ffffff 100%);">
+        <h1 style="font-size: 72px; color: var(--primary-color); margin-bottom: 30px; font-weight: 900; letter-spacing: 2px;">大学竞赛破局指南</h1>
+        <h2 style="font-size: 36px; color: var(--text-main); margin-bottom: 20px; font-weight: 500;">从0到1：电赛入门与控制类循迹小车实战</h2>
+        <div style="width: 100px; height: 4px; background: var(--accent-color); margin: 30px auto;"></div>
+        <p style="font-size: 24px; color: var(--text-muted);">致大一新生的硬核工程辅导</p>
+    </div>
+
+    <!-- Slide 2: 讲师介绍 -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">主讲人：你的竞赛引路人</h2>
+        </div>
+        <div class="slide-content two-col">
+            <div>
+                <h3 style="font-size: 28px; margin-bottom: 30px; color: var(--primary-color);">跨界打击：从学术到工程的全面实战履历</h3>
+                <ul class="custom-list">
+                    <li><span class="highlight">双创竞赛：</span>国银/国铜中国国际大学生创新大赛（互联网+）、省金挑战杯（大挑/小挑）、省二ican大赛。</li>
+                    <li><span class="highlight">工程硬核：</span>省二全国大学生电子设计竞赛（电赛）、国三/省二中国机器人及人工智能大赛、省二大唐杯。</li>
+                    <li><span class="highlight">学术理论：</span>国际美赛M奖、国二全国大学生英语竞赛、省一数学竞赛、省二数学建模。</li>
+                </ul>
+                <div style="margin-top: 40px; padding: 25px; background: #e6fffa; border-left: 4px solid var(--accent-color); font-size: 20px; font-style: italic; border-radius: 0 8px 8px 0;">
+                    “竞赛的本质不仅是技术的比拼，更是资源整合、快速学习与工程落地能力的综合考验。今天，我们只讲最核心的干货。”
+                </div>
+            </div>
+            <div class="img-container">
+                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1200&auto=format&fit=crop" alt="Engineer working">
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: 竞赛的重要性 (考研) -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">为什么大学一定要参加竞赛？（一）</h2>
+        </div>
+        <div class="slide-content two-col">
+            <div class="img-container">
+                <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1200&auto=format&fit=crop" alt="Students collaborating">
+            </div>
+            <div>
+                <h3 style="font-size: 32px; margin-bottom: 25px; color: var(--primary-color);">考研复试的“免死金牌”与“加分利器”</h3>
+                <p style="font-size: 20px; line-height: 1.8; margin-bottom: 20px;">在考研初试成绩越来越“卷”的今天，复试往往成为拉开差距的关键。而高水平的竞赛成果，就是你在复试中最亮眼的筹码。</p>
+                <ul class="custom-list" style="margin-top: 20px;">
+                    <li><span class="highlight">证明科研潜力：</span>导师最看重的是学生的动手能力和解决实际问题的能力，省级/国家级奖项是这方面最直接的证明。</li>
+                    <li><span class="highlight">主导面试节奏：</span>拥有硬核竞赛项目，你可以将复试导师的提问引导到你熟悉的竞赛内容上，避免被问倒。</li>
+                    <li><span class="highlight">调剂时的降维打击：</span>如果在初试成绩不理想需要调剂时，手握重量级竞赛奖项（如电赛国奖），往往能让接收院校破格录取。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: 竞赛的重要性 (综合) -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">为什么大学一定要参加竞赛？（二）</h2>
+        </div>
+        <div class="slide-content">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; height: 100%;">
+                <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                    <i class="fa-solid fa-briefcase" style="font-size: 60px; color: var(--accent-color); margin-bottom: 20px;"></i>
+                    <h3 style="font-size: 24px; margin-bottom: 15px; color: var(--text-main);">求职就业的敲门砖</h3>
+                    <p style="font-size: 18px; color: var(--text-muted); line-height: 1.6;">对于电子信息类专业，企业HR极其看重项目经验。简历上的“全国大学生电子设计竞赛省级一等奖”，比任何苍白的自我评价都有效，是进入大厂（如华为、大疆）的绿色通道。</p>
+                </div>
+                <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                    <i class="fa-solid fa-graduation-cap" style="font-size: 60px; color: var(--primary-color); margin-bottom: 20px;"></i>
+                    <h3 style="font-size: 24px; margin-bottom: 15px; color: var(--text-main);">保研加分的核心权重</h3>
+                    <p style="font-size: 18px; color: var(--text-muted); line-height: 1.6;">如果你有意向保研，成绩是门槛，竞赛就是决定能否成功的阶梯。各类A类赛事（如创新大赛、挑战杯、电赛）在综合测评中占有极高的加分权重。</p>
+                </div>
+                <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                    <i class="fa-solid fa-brain" style="font-size: 60px; color: #ed8936; margin-bottom: 20px;"></i>
+                    <h3 style="font-size: 24px; margin-bottom: 15px; color: var(--text-main);">工程思维与抗压能力</h3>
+                    <p style="font-size: 18px; color: var(--text-muted); line-height: 1.6;">竞赛要求在极限时间内（如电赛的4天3夜）完成从需求分析、方案设计、硬件焊接、软件调试到报告撰写的全流程，这将重塑你的工程思维体系。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: 过渡页 -->
+    <div class="slide" style="justify-content: center; align-items: center; background-color: var(--primary-color); color: white;">
+        <h2 style="font-size: 50px; font-weight: 700;">第一部分：大学竞赛全景扫描</h2>
+        <p style="font-size: 24px; margin-top: 20px; opacity: 0.9;">理清头绪，告别大一新生的盲目参赛</p>
+    </div>
+
+    <!-- Slide 6: 三大分类 -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">大学竞赛的三大底层逻辑分类</h2>
+        </div>
+        <div class="slide-content">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; height: 80%;">
+                <div class="card">
+                    <i class="fa-solid fa-microchip" style="font-size: 40px; color: var(--primary-color); margin-bottom: 20px;"></i>
+                    <h3 style="font-size: 24px; margin-bottom: 10px;">工程实战类</h3>
+                    <p style="font-size: 16px; color: var(--text-muted); margin-bottom: 20px;">代表：电赛、智能车、机器人大赛。</p>
+                    <p style="font-size: 18px; line-height: 1.6;">这是工科生的大本营。重点考察软硬件结合、代码调试与现场解决Bug的能力。极度硬核，是大一打磨技术底座的最佳选择。</p>
+                </div>
+                <div class="card">
+                    <i class="fa-solid fa-chart-line" style="font-size: 40px; color: var(--accent-color); margin-bottom: 20px;"></i>
+                    <h3 style="font-size: 24px; margin-bottom: 10px;">创新创业类</h3>
+                    <p style="font-size: 16px; color: var(--text-muted); margin-bottom: 20px;">代表：创新大赛(原互联网+)、挑战杯。</p>
+                    <p style="font-size: 18px; line-height: 1.6;">偏向商业落地。你需要商业计划书(BP)、精美的PPT与路演答辩。建议大二大三带着电赛的“技术成品”来降维打击。</p>
+                </div>
+                <div class="card">
+                    <i class="fa-solid fa-square-root-variable" style="font-size: 40px; color: #ed8936; margin-bottom: 20px;"></i>
+                    <h3 style="font-size: 24px; margin-bottom: 10px;">学术基础类</h3>
+                    <p style="font-size: 16px; color: var(--text-muted); margin-bottom: 20px;">代表：数学建模、数学/英语竞赛。</p>
+                    <p style="font-size: 18px; line-height: 1.6;">考验逻辑推演、算法建立与论文撰写能力。这类竞赛能极大提升你的文献检索与学术抗压能力。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 7: 电子信息专业竞赛罗列 (Part 1) -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">电子信息类核心赛事一览 (一)</h2>
+        </div>
+        <div class="slide-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 25%">赛事名称 (全称)</th>
+                        <th style="width: 15%">类别/含金量</th>
+                        <th style="width: 60%">核心考察内容</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>全国大学生电子设计竞赛</strong></td>
+                        <td>A类 / 极高</td>
+                        <td>模电数电基础、单片机/FPGA编程、仪器仪表使用、抗压极限设计(4天3夜)。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>全国大学生智能汽车竞赛</strong></td>
+                        <td>A类 / 极高</td>
+                        <td>硬件电路设计、电机控制算法(PID)、机器视觉识别、传感器数据处理。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>中国机器人及人工智能大赛</strong></td>
+                        <td>A类 / 高</td>
+                        <td>机器人运动学、SLAM导航、人工智能算法部署、多机协同控制。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>国家级大学生创新创业训练计划</strong></td>
+                        <td>A类 / 极高</td>
+                        <td>(大创) 完整的科研项目申报、中期检查、软硬件实物开发、论文/专利产出与结题。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>蓝桥杯全国软件和信息技术专业人才大赛</strong></td>
+                        <td>A类 / 较高</td>
+                        <td>C/C++编程基础、数据结构与算法、单片机(51/STM32)底层寄存器配置与外设应用。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Slide 8: 电子信息专业竞赛罗列 (Part 2) -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">电子信息类核心赛事一览 (二)</h2>
+        </div>
+        <div class="slide-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 25%">赛事名称 (全称)</th>
+                        <th style="width: 15%">类别/含金量</th>
+                        <th style="width: 60%">核心考察内容</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>中国国际大学生创新大赛</strong></td>
+                        <td>顶级A类 / 极高</td>
+                        <td>(原互联网+) 基于硬核技术的商业模式设计、产品市场化能力、PPT制作与路演答辩能力。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>“挑战杯”全国大学生课外学术科技作品竞赛</strong></td>
+                        <td>顶级A类 / 极高</td>
+                        <td>(大挑) 学术研究深度、技术创新性、论文撰写规范、科研成果或实物的硬核程度。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>高教社杯全国大学生数学建模竞赛</strong></td>
+                        <td>A类 / 高</td>
+                        <td>(国赛) 现实问题抽象、数学模型建立、MATLAB/Python编程求解、学术论文排版撰写。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>全国大学生数学竞赛 (CMC)</strong></td>
+                        <td>A类 / 较高</td>
+                        <td>高等数学（微积分）深度理解、复杂公式推导、考研压轴级别题型解答。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>全国大学生英语竞赛 (NECCS)</strong></td>
+                        <td>B类 / 较高</td>
+                        <td>(大英赛) 庞大词汇量储备、长难句快速阅读、翻译技巧、听力及综合英语素养。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Slide 9: 竞赛深度解析 (电赛) -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">核心赛事深度解析：全国大学生电子设计竞赛</h2>
+        </div>
+        <div class="slide-content two-col">
+            <div>
+                <ul class="custom-list">
+                    <li><span class="highlight">比赛形式：</span>3人组队（通常为硬件+软件+统筹）。</li>
+                    <li><span class="highlight">比赛时间：</span>奇数年为国赛，偶数年为省赛（通常在8月上旬）。</li>
+                    <li><span class="highlight">学习内容与准备：</span>
+                        <ul style="list-style: circle; padding-left: 20px; margin-top: 10px; font-size: 18px; color: var(--text-muted);">
+                            <li>打牢《电路分析》《模拟电子技术》基础。</li>
+                            <li>熟练掌握一款微控制器（如STM32或TI的MSP430）。</li>
+                            <li>学习使用立创EDA绘制PCB并手工焊接。</li>
+                            <li>历年真题复现：赛前至少完成3-5套往年真题的全流程制作。</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="card" style="background-color: #ebf8ff; border-color: #90cdf4;">
+                <h3 style="color: #2b6cb0; margin-bottom: 15px;">难度与含金量分析</h3>
+                <p style="font-size: 18px; line-height: 1.6;"><strong>极难。</strong>电赛被称为工科生的“极限生存挑战”，需要在四天三夜内完成一个复杂系统的设计与制作。正因如此，其含金量在硬件领域无可替代，是保研和找大厂硬件岗位的绝对通行证。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 10: 竞赛深度解析 (智能车) -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">核心赛事深度解析：全国大学生智能汽车竞赛</h2>
+        </div>
+        <div class="slide-content two-col">
+            <div>
+                <ul class="custom-list">
+                    <li><span class="highlight">比赛形式：</span>团队战（通常3-5人，分硬件组、控制组、视觉组）。</li>
+                    <li><span class="highlight">比赛时间：</span>每年7月-8月举行分赛区及全国总决赛。</li>
+                    <li><span class="highlight">学习内容与准备：</span>
+                        <ul style="list-style: circle; padding-left: 20px; margin-top: 10px; font-size: 18px; color: var(--text-muted);">
+                            <li>基于指定的微控制器（如NXP、Infineon）进行底层开发。</li>
+                            <li>深入学习控制理论（PID算法等）以实现高速稳定行驶。</li>
+                            <li>学习机器视觉（OpenCV）处理摄像头图像进行赛道识别。</li>
+                            <li>机械结构的微调与优化。</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="card" style="background-color: #ebf8ff; border-color: #90cdf4;">
+                <h3 style="color: #2b6cb0; margin-bottom: 15px;">难度与含金量分析</h3>
+                <p style="font-size: 18px; line-height: 1.6;"><strong>难。</strong>周期长，通常需要准备半年以上。考察软硬件结合及控制算法的极限调优。在汽车电子、自动驾驶、机器人行业认可度极高，含金量A类。</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 11: 竞赛深度解析 (蓝桥杯) -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">核心赛事深度解析：蓝桥杯 (单片机/嵌入式组)</h2>
+        </div>
+        <div class="slide-content two-col">
+            <div>
+                <ul class="custom-list">
+                    <li><span class="highlight">比赛形式：</span>个人战（机考）。</li>
+                    <li><span class="highlight">比赛时间：</span>每年4月省赛，6月国赛。</li>
+                    <li><span class="highlight">学习内容与准备：</span>
+                        <ul style="list-style: circle; padding-left: 20px; margin-top: 10px; font-size: 18px; color: var(--text-muted);">
+                            <li>熟记指定开发板（如国信长天系列）的原理图。</li>
+                            <li>针对性训练C语言裸机编程，不依赖库函数（或熟悉官方库）。</li>
+                            <li>模块化练习：定时器、中断、ADC、IIC、SPI等外设的快速配置与调用。</li>
+                            <li>刷历年真题，提高在有限时间内完成指定逻辑任务的速度。</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="card" style="background-color: #f0fff4; border-color: #9ae6b4;">
+                <h3 style="color: #276749; margin-bottom: 15px;">难度与含金量分析</h3>
+                <p style="font-size: 18px; line-height: 1.6;"><strong>中等。</strong>偏向软件编程考核，不需要自己画板焊接，入门门槛相对较低。获奖率较高，适合大一/大二学生作为嵌入式学习的初期检验。含金量属于A类（部分学校算B类），是积累信心的好途径。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 12: 竞赛深度解析 (大创) -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">核心赛事深度解析：国家级大学生创新创业训练计划</h2>
+        </div>
+        <div class="slide-content two-col">
+            <div>
+                <ul class="custom-list">
+                    <li><span class="highlight">比赛形式：</span>团队战（通常3-5人，必须有1-2名指导老师）。</li>
+                    <li><span class="highlight">比赛时间：</span>每年3-5月申报立项，次年4-5月结题答辩。</li>
+                    <li><span class="highlight">学习内容与准备：</span>
+                        <ul style="list-style: circle; padding-left: 20px; margin-top: 10px; font-size: 18px; color: var(--text-muted);">
+                            <li>寻找科研导师，确定一个具有创新性的研究课题。</li>
+                            <li>撰写规范的《项目申报书》，陈述研究背景、内容与预期成果。</li>
+                            <li>开展为期一年的实打实开发/科研工作。</li>
+                            <li>总结成果，发表论文、申请专利或展示实物模型，撰写结题报告。</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="card" style="background-color: #fffaf0; border-color: #fbd38d;">
+                <h3 style="color: #c05621; margin-bottom: 15px;">难度与含金量分析</h3>
+                <p style="font-size: 18px; line-height: 1.6;"><strong>较高。</strong>“大创”本身是一个培养计划，级别分为校级、省级、国家级。国创/省创含金量极高，是保研加分的绝对利器，并且是后续参加“创新大赛”和“挑战杯”的最佳项目孵化池。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 13: 竞赛深度解析 (创新大赛/互联网+) -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">核心赛事深度解析：中国国际大学生创新大赛</h2>
+        </div>
+        <div class="slide-content two-col">
+            <div>
+                <ul class="custom-list">
+                    <li><span class="highlight">比赛形式：</span>团队战（成员规模可较大，需明确的技术、产品、财务分工）。</li>
+                    <li><span class="highlight">比赛时间：</span>每年4-5月校赛，7-8月省赛，10月国赛。</li>
+                    <li><span class="highlight">学习内容与准备：</span>
+                        <ul style="list-style: circle; padding-left: 20px; margin-top: 10px; font-size: 18px; color: var(--text-muted);">
+                            <li><strong>不要空想：</strong>以大创项目或工程实战成品作为技术底座。</li>
+                            <li>撰写几十页逻辑严密的商业计划书 (BP)。</li>
+                            <li>制作极具视觉冲击力的路演PPT。</li>
+                            <li>无限次模拟5分钟路演答辩与评委（投资人）尖锐提问。</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="card" style="background-color: #fffaf0; border-color: #fbd38d;">
+                <h3 style="color: #c05621; margin-bottom: 15px;">难度与含金量分析</h3>
+                <p style="font-size: 18px; line-height: 1.6;"><strong>极高 (顶级A类)。</strong>原“互联网+”大赛，全国参赛人数最多、最内卷的赛事。国奖保研基本稳拿，是各大高校极其看重的“门面”奖项，不仅考技术，更考商业落地与演讲表现力。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 14: 竞赛深度解析 (大挑) -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">核心赛事深度解析：“挑战杯”全国大学生课外学术科技作品竞赛</h2>
+        </div>
+        <div class="slide-content two-col">
+            <div>
+                <ul class="custom-list">
+                    <li><span class="highlight">比赛形式：</span>团队战（偏重硬核学术与科技成果展示）。</li>
+                    <li><span class="highlight">比赛时间：</span>逢单数年举办。通常上半年校赛/省赛，下半年国赛。</li>
+                    <li><span class="highlight">学习内容与准备：</span>
+                        <ul style="list-style: circle; padding-left: 20px; margin-top: 10px; font-size: 18px; color: var(--text-muted);">
+                            <li>依托实验室深度科研成果（如高质量SCI论文、发明专利或硬核科技实物）。</li>
+                            <li>撰写极其严谨的学术科技作品申报书，格式堪比学位论文。</li>
+                            <li>制作学术海报与现场实物展板。</li>
+                            <li>准备面对学科专家的封闭式问辩。</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="card" style="background-color: #faf5ff; border-color: #d6bcfa;">
+                <h3 style="color: #6b46c1; margin-bottom: 15px;">难度与含金量分析</h3>
+                <p style="font-size: 18px; line-height: 1.6;"><strong>极难 (顶级A类)。</strong>俗称“大挑”，被誉为大学生科技创新的“奥林匹克”。侧重绝对的“学术性”和“科技含量”，容不得半点商业包装的水分。其国奖在保研/学术界认可度封顶。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 15: 竞赛深度解析 (小挑) -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">核心赛事深度解析：“挑战杯”中国大学生创业计划竞赛</h2>
+        </div>
+        <div class="slide-content two-col">
+            <div>
+                <ul class="custom-list">
+                    <li><span class="highlight">比赛形式：</span>团队战（偏重创业计划与社会价值）。</li>
+                    <li><span class="highlight">比赛时间：</span>逢双数年举办，与“大挑”交替。</li>
+                    <li><span class="highlight">学习内容与准备：</span>
+                        <ul style="list-style: circle; padding-left: 20px; margin-top: 10px; font-size: 18px; color: var(--text-muted);">
+                            <li>形式类似“创新大赛”，但更注重项目的“社会价值”、“实践过程”和“创业可行性”。</li>
+                            <li>需要详实的市场调研数据、痛点分析和严密的财务模型。</li>
+                            <li>撰写创业计划书，准备路演PPT和答辩。</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="card" style="background-color: #faf5ff; border-color: #d6bcfa;">
+                <h3 style="color: #6b46c1; margin-bottom: 15px;">难度与含金量分析</h3>
+                <p style="font-size: 18px; line-height: 1.6;"><strong>极难 (顶级A类)。</strong>俗称“小挑”。虽然也带创业二字，但由于是共青团中央主办，评委口味偏向扎实的社会调研与公益/社会价值。对文案编排、演讲逻辑要求极高。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 16: 竞赛深度解析 (数模国赛) -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">核心赛事深度解析：高教社杯全国大学生数学建模竞赛</h2>
+        </div>
+        <div class="slide-content two-col">
+            <div>
+                <ul class="custom-list">
+                    <li><span class="highlight">比赛形式：</span>团队战（3人，经典配置：建模手、编程手、论文手）。</li>
+                    <li><span class="highlight">比赛时间：</span>每年9月中旬（通常为周四至周日，3天3夜极限战）。</li>
+                    <li><span class="highlight">学习内容与准备：</span>
+                        <ul style="list-style: circle; padding-left: 20px; margin-top: 10px; font-size: 18px; color: var(--text-muted);">
+                            <li><strong>建模：</strong>学习运筹优化、机理分析、评价决策等常见数学模型。</li>
+                            <li><strong>编程：</strong>熟练掌握MATLAB或Python进行数据清洗、算法求解和图表绘制。</li>
+                            <li><strong>论文：</strong>熟练使用Word或LaTeX排版高质量科技论文。</li>
+                            <li>赛前进行至少2-3次完整的3天模拟训练。</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="card" style="background-color: #e6fffa; border-color: #81e6d9;">
+                <h3 style="color: #2c7a7b; margin-bottom: 15px;">难度与含金量分析</h3>
+                <p style="font-size: 18px; line-height: 1.6;"><strong>难 (A类)。</strong>国赛时间紧、强度极大。不仅考验数学逻辑能力，更考验团队配合、体能与抗压能力。在所有理工科保研中认可度极广，是体现学术潜力的硬核奖项。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 17: 竞赛深度解析 (美赛) -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">核心赛事深度解析：美国大学生数学建模竞赛 (MCM/ICM)</h2>
+        </div>
+        <div class="slide-content two-col">
+            <div>
+                <ul class="custom-list">
+                    <li><span class="highlight">比赛形式：</span>团队战（3人，需用全英文撰写学术论文）。</li>
+                    <li><span class="highlight">比赛时间：</span>每年2月（通常在春节前后，4天4夜）。</li>
+                    <li><span class="highlight">学习内容与准备：</span>
+                        <ul style="list-style: circle; padding-left: 20px; margin-top: 10px; font-size: 18px; color: var(--text-muted);">
+                            <li>除了国赛的基础准备外，赛题通常更加开放宏大（如气候变化、政策评估）。</li>
+                            <li>需要极强的英文文献检索阅读能力。</li>
+                            <li>必须具备规范的科技英文论文撰写与翻译能力。</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="card" style="background-color: #e6fffa; border-color: #81e6d9;">
+                <h3 style="color: #2c7a7b; margin-bottom: 15px;">难度与含金量分析</h3>
+                <p style="font-size: 18px; line-height: 1.6;"><strong>较高。</strong>奖项设置有固定比例（O/F/M/H/S奖）。获得M奖（Meritorious Winner，约等同于一等奖）及以上，在保研面试和出国申请中具有显著优势，能同时证明优秀的英语水平与学术潜力。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 18: 竞赛深度解析 (数学竞赛) -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">核心赛事深度解析：全国大学生数学竞赛 (CMC)</h2>
+        </div>
+        <div class="slide-content two-col">
+            <div>
+                <ul class="custom-list">
+                    <li><span class="highlight">比赛形式：</span>个人战（闭卷笔试，分为数学专业组和非数学专业组）。</li>
+                    <li><span class="highlight">比赛时间：</span>每年10月预赛(省赛)，次年3-4月全国决赛。</li>
+                    <li><span class="highlight">学习内容与准备：</span>
+                        <ul style="list-style: circle; padding-left: 20px; margin-top: 10px; font-size: 18px; color: var(--text-muted);">
+                            <li>非数学类重点考核《高等数学》（微积分、级数、空间解析几何）。</li>
+                            <li>不要只看教材，需要研读高数深度定理与证明题。</li>
+                            <li>疯狂刷题：刷历年真题及考研数学（数一）的压轴拓展题库。</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="card" style="background-color: #f0f4f8; border-color: #a0aec0;">
+                <h3 style="color: #4a5568; margin-bottom: 15px;">难度与含金量分析</h3>
+                <p style="font-size: 18px; line-height: 1.6;"><strong>难。</strong>这是一场纯粹的智商与刷题量比拼，没有团队捷径可走。拿到省一等奖及以上含金量很高，能向未来的导师直接证明你具备极强的数理逻辑基础，是搞科研的好苗子。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 19: 竞赛深度解析 (大英赛) -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">核心赛事深度解析：全国大学生英语竞赛 (NECCS)</h2>
+        </div>
+        <div class="slide-content two-col">
+            <div>
+                <ul class="custom-list">
+                    <li><span class="highlight">比赛形式：</span>个人战（笔试+听力，决赛可能有口语。理工科通常考C类）。</li>
+                    <li><span class="highlight">比赛时间：</span>每年4月或5月举办初赛，随后进行决赛。</li>
+                    <li><span class="highlight">学习内容与准备：</span>
+                        <ul style="list-style: circle; padding-left: 20px; margin-top: 10px; font-size: 18px; color: var(--text-muted);">
+                            <li>扩充词汇量至大学英语六级及以上水平。</li>
+                            <li>针对性训练大英赛特有题型（如智力测试题、改错、翻译）。</li>
+                            <li>适应其巨大的题量，练习在时间高压下快速阅读长难句。</li>
+                            <li>坚持每日英语听力精听训练。</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="card" style="background-color: #f0f4f8; border-color: #a0aec0;">
+                <h3 style="color: #4a5568; margin-bottom: 15px;">难度与含金量分析</h3>
+                <p style="font-size: 18px; line-height: 1.6;"><strong>中等 (B类)。</strong>获奖率有固定比例限制。如果你的四六级分数不够高，拿到大英赛国家级奖项（特等奖、一等奖）在保研简历中非常亮眼，能直接弥补短板，证明你的外语学术交流潜力。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 20: 工程实战类深度剖析 -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">深度剖析：工程实战类 (造物者的舞台)</h2>
+        </div>
+        <div class="slide-content two-col">
+            <div class="card" style="display: flex; flex-direction: column; gap: 20px; background: transparent; border: none; padding: 0;">
+                <div style="background: #fff; padding: 20px; border-radius: 8px; border-left: 4px solid var(--primary-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <p style="font-size: 18px;"><strong>核心逻辑：</strong>从“图纸”到能在真实世界跑起来的“实体”。重点考察极限条件下的Bug排查能力、软硬件联调与抗压能力。</p>
+                </div>
+                <div style="background: #fff; padding: 20px; border-radius: 8px; border-left: 4px solid var(--accent-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <p style="font-size: 18px;"><strong>大一路径(打地基)：</strong>打牢C语言，速通51或STM32单片机基础外设。练习基础模块调试（如点亮LED、驱动电机转动、读取红外传感器），熟练使用万用表与电烙铁。</p>
+                </div>
+                <div style="background: #fff; padding: 20px; border-radius: 8px; border-left: 4px solid #ed8936; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <p style="font-size: 18px;"><strong>大二路径(立主心骨)：</strong>深入学习控制算法（如PID）、熟悉RTOS（实时操作系统）。掌握PCB画板技能（如立创EDA），摆脱面包板，实现硬件电路的独立设计。</p>
+                </div>
+                <div style="background: #fff; padding: 20px; border-radius: 8px; border-left: 4px solid #9f7aea; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <p style="font-size: 18px;"><strong>大三路径(冲刺国奖)：</strong>结合机器视觉（OpenMV/ROS）、复杂数据结构与多机协同，完成高难度、高稳定性的系统级设计。</p>
+                </div>
+            </div>
+            <div class="img-container">
+                <img src="https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?q=80&w=1200&auto=format&fit=crop" alt="Soldering circuit board">
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 21: 创新创业类 -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">深度剖析：创新创业类 (将技术推向市场)</h2>
+        </div>
+        <div class="slide-content two-col">
+            <div class="card">
+                <h3 style="color: var(--primary-color); margin-bottom: 20px; font-size: 24px;">第一阶段：技术沉淀与包装期</h3>
+                <ul class="custom-list">
+                    <li><strong>切忌空想商业模式：</strong>优秀的双创项目往往脱胎于“工程实战类”的成果。用你在电赛、智能车比赛中做出的实体模型作为项目的“技术底座”。</li>
+                    <li><strong>挖掘痛点：</strong>思考你的技术能解决现实中的什么问题？比如你的循迹小车算法，能否包装成“智慧仓储物流AGV调度系统”的核心模块？</li>
+                    <li><strong>专利与软著：</strong>在此阶段，将核心技术申请软件著作权或实用新型专利，这是双创比赛中最核心的“技术壁垒”得分点。</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3 style="color: var(--accent-color); margin-bottom: 20px; font-size: 24px;">第二阶段：商业包装与路演期</h3>
+                <ul class="custom-list">
+                    <li><strong>撰写商业计划书(BP)：</strong>学习分析市场容量、竞争对手、盈利模式与财务预测。要求逻辑严密，数据详实。</li>
+                    <li><strong>PPT视觉设计：</strong>双创比赛的评委多为投资人或企业高管。PPT不能全是代码，必须用图表直观展示商业价值与优势。</li>
+                    <li><strong>路演答辩训练：</strong>培养抗压与控场能力。能在5分钟内清晰讲述“我们是谁、解决了什么痛点、凭什么赢、怎么赚钱”。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 22: 学术基础类 (补全遗漏部分) -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">深度剖析：学术基础类 (思维的体操)</h2>
+        </div>
+        <div class="slide-content two-col">
+            <div class="img-container">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop" alt="Data visualization">
+            </div>
+            <div class="card" style="display: flex; flex-direction: column; gap: 20px; background: transparent; border: none; padding: 0;">
+                <div style="background: #fff; padding: 20px; border-radius: 8px; border-left: 4px solid var(--primary-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <p style="font-size: 18px;"><strong>核心逻辑：</strong>用数学语言和计算机代码解决现实世界的抽象问题。这是未来深造科研、撰写高水平学术Paper的绝佳演练场。</p>
+                </div>
+                <div style="background: #fff; padding: 20px; border-radius: 8px; border-left: 4px solid var(--accent-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <p style="font-size: 18px;"><strong>编程手进阶：</strong>不要只停留在学基础语法。重点掌握Python或MATLAB，熟悉常见的算法工具包（如预测模型、优化算法、机器学习与数据可视化）。</p>
+                </div>
+                <div style="background: #fff; padding: 20px; border-radius: 8px; border-left: 4px solid #ed8936; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <p style="font-size: 18px;"><strong>建模手进阶：</strong>广泛阅读历年美赛/国赛的优秀O奖论文，建立解决问题的“模型库”思维，学会将现实问题转化为数学公式。</p>
+                </div>
+                <div style="background: #fff; padding: 20px; border-radius: 8px; border-left: 4px solid #9f7aea; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <p style="font-size: 18px;"><strong>论文手进阶：</strong>排版是门面，推荐学习并熟练使用LaTeX排版。锻炼学术化、严谨的英文阅读与科技写作能力。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 23: 过渡页 2 -->
+    <div class="slide" style="justify-content: center; align-items: center; background-color: var(--accent-color); color: white;">
+        <h2 style="font-size: 50px; font-weight: 700;">第二部分：学以致用与电赛实战</h2>
+        <p style="font-size: 24px; margin-top: 20px; opacity: 0.9;">打破“学完才能做”的焦虑，建立急用先学的工程思维</p>
+    </div>
+
+    <!-- Slide 24: 知识图谱 -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">你的知识储备如何变现为“循迹小车”？</h2>
+        </div>
+        <div class="slide-content two-col">
+            <div>
+                <h3 style="font-size: 24px; margin-bottom: 15px; color: var(--primary-color);">硬件底座：电路分析与模电</h3>
+                <p style="font-size: 18px; margin-bottom: 10px; font-weight: bold;">核心映射：电源管理与电机驱动。</p>
+                <p style="font-size: 18px; line-height: 1.6; color: var(--text-muted); margin-bottom: 30px;">你在课堂上学的基尔霍夫定律和放大电路，在小车上将化为实物：如何设计降压稳压模块（如LM2596）给STM32供电？如何理解电机驱动模块（TB6612或L298N）的H桥原理来控制电机正反转？这是小车能动的基础。</p>
+
+                <h3 style="font-size: 24px; margin-bottom: 15px; color: var(--accent-color);">算法大脑：高数、C语言与Python</h3>
+                <p style="font-size: 18px; margin-bottom: 10px; font-weight: bold;">核心映射：运动控制与高级视觉。</p>
+                <ul class="custom-list" style="font-size: 18px;">
+                    <li><strong>C语言：</strong>是编写STM32底层的唯一利器。</li>
+                    <li><strong>高等数学：</strong>微积分是PID控制算法的灵魂，让小车平滑拐弯不抖动。</li>
+                    <li><strong>Python：</strong>为后续进阶视觉循迹（如OpenMV）埋下伏笔。</li>
+                </ul>
+            </div>
+            <div class="card" style="background: #fffff0; border-color: #faf089;">
+                <h3 style="font-size: 24px; margin-bottom: 20px; color: #d69e2e;">硬件选型极简建议</h3>
+                <ul style="font-size: 18px; line-height: 2;">
+                    <li><strong>1. 主控：</strong>STM32F103C8T6（便宜够用，资料最多）。</li>
+                    <li><strong>2. 传感器：</strong>灰度传感器（推荐数字量输出，抗光干扰强）。</li>
+                    <li><strong>3. 电机：</strong>带霍尔编码器的直流减速电机（做速度闭环必备）。</li>
+                    <li><strong>4. 供电：</strong>航模电池(LiPo)配合LM2596降压模块。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 25: STM32速成 -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">STM32 速成战略</h2>
+        </div>
+        <div class="slide-content two-col">
+            <div style="background: var(--primary-color); color: white; padding: 40px; border-radius: var(--border-radius); height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                <h3 style="font-size: 32px; margin-bottom: 20px;">做减法！</h3>
+                <p style="font-size: 20px; margin-bottom: 30px; opacity: 0.9;">大一新生切忌从头到尾刷完江协科技全集才动手。</p>
+                <p style="font-size: 20px; margin-bottom: 20px;">针对控制类循迹小车，你只需重点突破这三板斧：</p>
+                <ul style="font-size: 22px; line-height: 2; list-style: decimal; padding-left: 20px; font-weight: bold;">
+                    <li>GPIO：读取灰度/红外传感器状态。</li>
+                    <li>TIM (定时器与PWM)：精准调控电机的转速。</li>
+                    <li>EXTI (外部中断)：处理特殊边界标志位。</li>
+                </ul>
+            </div>
+            <div class="img-container">
+                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop" alt="Microcontroller">
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 26: PID控制 -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">控制类之魂：吃透 PID 算法</h2>
+        </div>
+        <div class="slide-content">
+            <h3 style="text-align: center; font-size: 28px; color: var(--primary-color);">3大核心参数决定成败</h3>
+            
+            <div class="math-container">
+                $$ u(t) = K_p e(t) + K_i \int_{0}^{t} e(\tau) d\tau + K_d \frac{de(t)}{dt} $$
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 30px;">
+                <div class="card" style="border-top: 4px solid #e53e3e;">
+                    <h4 style="font-size: 24px; color: #e53e3e; margin-bottom: 10px;">P (比例)</h4>
+                    <p style="font-size: 16px; color: var(--text-muted);"><strong>现在的误差。</strong></p>
+                    <p style="font-size: 16px; margin-top: 10px;">偏离黑线越多，方向盘打得越猛。但参数过大会容易引起左右来回震荡。</p>
+                </div>
+                <div class="card" style="border-top: 4px solid #3182ce;">
+                    <h4 style="font-size: 24px; color: #3182ce; margin-bottom: 10px;">I (积分)</h4>
+                    <p style="font-size: 16px; color: var(--text-muted);"><strong>过去的误差。</strong></p>
+                    <p style="font-size: 16px; margin-top: 10px;">消除静态误差，解决小车“差一点点到中线但就是过不去”的顽疾。</p>
+                </div>
+                <div class="card" style="border-top: 4px solid #38a169;">
+                    <h4 style="font-size: 24px; color: #38a169; margin-bottom: 10px;">D (微分)</h4>
+                    <p style="font-size: 16px; color: var(--text-muted);"><strong>未来的误差。</strong></p>
+                    <p style="font-size: 16px; margin-top: 10px;">起“阻尼”作用，预测误差变化趋势，在小车快要冲出赛道前提前“踩刹车”，防止震荡。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 27: 修复并优化后的大学三年竞赛时间线规划 -->
+    <div class="slide" style="height: auto; min-height: 720px;">
+        <div class="slide-header">
+            <h2 class="slide-title">稳扎稳打：大一至大三竞赛时间线规划</h2>
+        </div>
+        <div class="slide-content">
+            <div class="tl-wrapper">
+                <div class="tl-line"></div>
+
+                <!-- 大一 -->
+                <div class="tl-item">
+                    <div class="tl-card tl-right b-blue">
+                        <div class="tl-title t-blue">大一学年 (夯实基础，初试牛刀)</div>
+                        <div class="tl-tag bg-blue"><i class="fa-solid fa-screwdriver-wrench" style="margin-right: 5px;"></i> 打牢C语言 / 模电 / 微积分基础</div>
+                        <ul class="tl-list">
+                            <li><strong class="t-blue">上学期：</strong>重点学语言，尝试参加校级选拔赛、数学竞赛。</li>
+                            <li><strong class="t-blue">下学期：</strong>参加蓝桥杯(个人战练手)、电赛校赛/省赛(哪怕做打杂，也要体验流程)。寻找大创导师准备立项申报。</li>
+                        </ul>
+                    </div>
+                    <div class="tl-node n-blue"></div>
+                    <div style="width: 45%;"></div>
+                </div>
+
+                <!-- 大二 -->
+                <div class="tl-item">
+                    <div class="tl-card tl-left b-teal">
+                        <div class="tl-title t-teal">大二学年 (技术成型，主力输出)</div>
+                        <div class="tl-tag bg-teal"><i class="fa-solid fa-microchip" style="margin-right: 5px;"></i> 掌握系统级设计，成为团队核心</div>
+                        <ul class="tl-list">
+                            <li><strong class="t-teal">上学期：</strong>组建固定团队，全力准备数学建模(国赛/美赛)。推进大创项目中期。</li>
+                            <li><strong class="t-teal">下学期：</strong>全力冲刺“智能车竞赛”或“电赛国赛”，力争拿国家级/省级核心奖项。</li>
+                        </ul>
+                    </div>
+                    <div class="tl-node n-teal"></div>
+                    <div style="width: 45%;"></div>
+                </div>
+
+                <!-- 大三 -->
+                <div class="tl-item">
+                    <div class="tl-card tl-right b-org">
+                        <div class="tl-title t-org">大三学年 (降维打击，成果转化)</div>
+                        <div class="tl-tag bg-org"><i class="fa-solid fa-trophy" style="margin-right: 5px;"></i> 为保研 / 就业做最终冲刺</div>
+                        <ul class="tl-list">
+                            <li><strong class="t-org">全年：</strong>将大二的电赛/智能车/大创成果包装升级，申报“大挑/小挑”或“创新大赛(原互联网+)”，争取专利落地，准备保研文书。</li>
+                        </ul>
+                    </div>
+                    <div class="tl-node n-org"></div>
+                    <div style="width: 45%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 28: 结束页 -->
+    <div class="slide" style="justify-content: center; align-items: center; text-align: center; background: #2d3748; color: white;">
+        <h2 style="font-size: 64px; color: white; margin-bottom: 20px;">工程没有魔法，只有死磕</h2>
+        <p style="font-size: 24px; color: #a0aec0; margin-bottom: 40px;">大一勇敢迈出第一步，你已经超越了80%的同龄人。</p>
+        <div style="padding: 20px 40px; border: 2px solid var(--primary-color); border-radius: 50px; font-size: 24px; font-weight: bold; color: var(--primary-color);">
+            Q&A | 欢迎学弟提问交流
+        </div>
+    </div>
+
+</body>
+</html>
